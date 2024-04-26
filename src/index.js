@@ -1,19 +1,17 @@
+import {
+  alert,
+  defaultModules,
+} from "../node_modules/@pnotify/core/dist/PNotify.js";
+import * as PNotifyMobile from "../node_modules/@pnotify/mobile/dist/PNotifyMobile.js";
+
+defaultModules.set(PNotifyMobile, {});
+import * as basicLightbox from "basiclightbox";
+
 const gallery = document.querySelector(".gallery");
 const searchbar = document.querySelector(".search-form");
 const loadMore = document.getElementById("loadMore");
+const search = document.getElementById("search-button");
 let page = 1;
-
-import * as basicLightbox from "basiclightbox";
-
-function debounce(func, timeout = 300) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func.apply(this, args);
-    }, timeout);
-  };
-}
 
 async function render(tags) {
   await fetch(
@@ -21,58 +19,66 @@ async function render(tags) {
   )
     .then((value) => value.json())
     .then((value) => {
-      for (let i of value.hits) {
-        gallery.insertAdjacentHTML(
-          "beforeend",
-          `
-        <li class="photo-card">
-          <img src="${i.webformatURL}" alt="${i.tags}" />
+      if (value.hits.length) {
+        loadMore.style.display = "block";
+        for (let i of value.hits) {
+          gallery.insertAdjacentHTML(
+            "beforeend",
+            `
+          <li class="photo-card">
+            <img src="${i.webformatURL}" alt="${i.tags}" />
 
-          <div class="stats">
-            <p class="stats-item">
-              <i class="material-icons">thumb_up</i>
-              ${i.likes}
-            </p>
-            <p class="stats-item">
-              <i class="material-icons">visibility</i>
-              ${i.views}
-            </p>
-            <p class="stats-item">
-              <i class="material-icons">comment</i>
-              ${i.comments}
-            </p>
-            <p class="stats-item">
-              <i class="material-icons">cloud_download</i>
-              ${i.downloads}
-            </p>
-          </div>
-        </li>`
-        );
-      }
-      setTimeout(() => {
-        const cards = document.querySelectorAll(".photo-card");
-        for (let i of cards) {
-          i.addEventListener("click", () => {
-            const instance = basicLightbox.create(`<img src="${i.firstElementChild.src}" width="800" height="600">`);
-            instance.show();
-          });
+            <div class="stats">
+              <p class="stats-item">
+                <i class="material-icons">thumb_up</i>
+                ${i.likes}
+              </p>
+              <p class="stats-item">
+                <i class="material-icons">visibility</i>
+                ${i.views}
+              </p>
+              <p class="stats-item">
+                <i class="material-icons">comment</i>
+                ${i.comments}
+              </p>
+              <p class="stats-item">
+                <i class="material-icons">cloud_download</i>
+                ${i.downloads}
+              </p>
+            </div>
+          </li>`
+          );
         }
-      }, 1000);
+        setTimeout(() => {
+          const cards = document.querySelectorAll(".photo-card");
+          for (let i = ((page - 2) * 12 + (12 - value.hits.length)) + 1; i < cards.length; i++) {
+            cards[i].addEventListener("click", () => {
+              const instance = basicLightbox.create(
+                `<img src="${cards[i].firstElementChild.src}" width="800" height="600">`
+              );
+              instance.show();
+            });
+          }
+        }, 1000);
+      } else if(value.hits.length < 12) {
+        alert({
+          text: "No images found!",
+        });
+        loadMore.style.display = "none";
+      }
     });
 }
 let features = "";
 render(features);
 page++;
 
-searchbar.firstElementChild.addEventListener(
-  "input",
-  debounce(() => {
-    gallery.innerHTML = "";
-    page = 1;
-    features = searchbar.firstElementChild.value.split(" ").join("+");
-    render(features);
-  }, 700)
-);
+search.addEventListener("click", () => {
+  gallery.innerHTML = "";
+  page = 1;
+  features = searchbar.firstElementChild.value.split(" ").join("+");
+  searchbar.firstElementChild.value = "";
+  render(features);
+});
 
 loadMore.addEventListener("click", async () => {
   page++;
@@ -84,7 +90,6 @@ loadMore.addEventListener("click", async () => {
     });
   }, 800);
 });
-
 
 // Нескінчене завантаження
 // const intersectionObserver = new IntersectionObserver((entries) => {
