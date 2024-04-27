@@ -147,6 +147,7 @@ function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyri
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 _PNotify.defaultModules.set(PNotifyMobile, {});
+var check = true;
 var gallery = document.querySelector(".gallery");
 var searchbar = document.querySelector(".search-form");
 var loadMore = document.getElementById("loadMore");
@@ -183,13 +184,17 @@ function _render() {
               }
               setTimeout(function () {
                 var cards = document.querySelectorAll(".photo-card");
+                console.log(cards.length);
+                console.log((page - 1) * 12);
+                console.log(cards.length - (12 - value.hits.length));
                 var _loop = function _loop(i) {
+                  console.log(i);
                   cards[i].addEventListener("click", function () {
                     var instance = basicLightbox.create("<img src=\"".concat(cards[i].firstElementChild.src, "\" width=\"800\" height=\"600\">"));
                     instance.show();
                   });
                 };
-                for (var i = (page - 2) * 12 + (12 - value.hits.length) + 1; i < cards.length; i++) {
+                for (var i = (page - 1) * 12; i < cards.length; i++) {
                   _loop(i);
                 }
               }, 1000);
@@ -210,7 +215,6 @@ function _render() {
 }
 var features = "";
 render(features);
-page++;
 search.addEventListener("click", function () {
   gallery.innerHTML = "";
   page = 1;
@@ -245,4 +249,4 @@ loadMore.addEventListener("click", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/
 // });
 // intersectionObserver.observe(loadMore);
 },{"../node_modules/@pnotify/core/dist/PNotify.js":"txz9","../node_modules/@pnotify/mobile/dist/PNotifyMobile.js":"ad6a","basiclightbox":"BNjD"}]},{},["Focm"], null)
-//# sourceMappingURL=src.a76e8ce3.js.map
+//# sourceMappingURL=src.f9f69fe3.js.map
