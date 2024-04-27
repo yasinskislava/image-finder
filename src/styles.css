@@ -17,6 +17,7 @@ ul {
 }
 
 .search-form input {
+    padding: 0px 8px;
     border-radius: 999px;
     --widthA: 300px;
     width: var(--widthA);

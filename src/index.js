@@ -20,7 +20,11 @@ async function render(tags) {
     .then((value) => value.json())
     .then((value) => {
       if (value.hits.length) {
+        
         loadMore.style.display = "block";
+        if (value.hits.length < 12 || value.total === 12) {
+          loadMore.style.display = "none";
+        }
         for (let i of value.hits) {
           gallery.insertAdjacentHTML(
             "beforeend",
@@ -60,11 +64,11 @@ async function render(tags) {
             });
           }
         }, 1000);
-      } else if(value.hits.length < 12) {
+      } else {
+        loadMore.style.display = "none";
         alert({
           text: "No images found!",
         });
-        loadMore.style.display = "none";
       }
     });
 }
