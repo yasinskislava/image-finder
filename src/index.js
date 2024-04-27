@@ -7,6 +7,7 @@ import * as PNotifyMobile from "../node_modules/@pnotify/mobile/dist/PNotifyMobi
 defaultModules.set(PNotifyMobile, {});
 import * as basicLightbox from "basiclightbox";
 
+let check = true;
 const gallery = document.querySelector(".gallery");
 const searchbar = document.querySelector(".search-form");
 const loadMore = document.getElementById("loadMore");
@@ -55,7 +56,11 @@ async function render(tags) {
         }
         setTimeout(() => {
           const cards = document.querySelectorAll(".photo-card");
-          for (let i = ((page - 2) * 12 + (12 - value.hits.length)) + 1; i < cards.length; i++) {
+          console.log(cards.length);
+          console.log((page - 1) * 12);
+          console.log(cards.length - (12 - value.hits.length));
+          for (let i = (page - 1) * 12; i < cards.length; i++) {
+            console.log(i);
             cards[i].addEventListener("click", () => {
               const instance = basicLightbox.create(
                 `<img src="${cards[i].firstElementChild.src}" width="800" height="600">`
@@ -74,7 +79,6 @@ async function render(tags) {
 }
 let features = "";
 render(features);
-page++;
 
 search.addEventListener("click", () => {
   gallery.innerHTML = "";
