@@ -166,6 +166,9 @@ function _render() {
           }).then(function (value) {
             if (value.hits.length) {
               loadMore.style.display = "block";
+              if (value.hits.length < 12 || value.total === 12) {
+                loadMore.style.display = "none";
+              }
               var _iterator = _createForOfIteratorHelper(value.hits),
                 _step;
               try {
@@ -190,11 +193,11 @@ function _render() {
                   _loop(i);
                 }
               }, 1000);
-            } else if (value.hits.length < 12) {
+            } else {
+              loadMore.style.display = "none";
               (0, _PNotify.alert)({
                 text: "No images found!"
               });
-              loadMore.style.display = "none";
             }
           });
         case 2:
@@ -242,4 +245,4 @@ loadMore.addEventListener("click", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/
 // });
 // intersectionObserver.observe(loadMore);
 },{"../node_modules/@pnotify/core/dist/PNotify.js":"txz9","../node_modules/@pnotify/mobile/dist/PNotifyMobile.js":"ad6a","basiclightbox":"BNjD"}]},{},["Focm"], null)
-//# sourceMappingURL=src.02e6f330.js.map
+//# sourceMappingURL=src.a76e8ce3.js.map
